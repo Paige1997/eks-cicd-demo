@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - REPOSITORY_URI="861185453846.dkr.ecr.us-east-1.amazonaws.com/eks-cicd-demo"
+      - IMAGE_TAG=$(date +%s)
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
+  build:
+    commands:
+      - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+  post_build:
+    commands:
+      - sed -i "s|<ECR_IMAGE_PLACEHOLDER>|$REPOSITORY_URI:$IMAGE_TAG|g" deployment.yaml
+
+artifacts:
+  files:
+    - deployment.yaml
+    - appspec.yaml

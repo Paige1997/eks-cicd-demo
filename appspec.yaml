@@ -1,0 +1,8 @@
+version: 0.0
+resources:
+  - myEKSService:
+      type: AWS::EKS::Service
+      properties:
+        clusterName: eks-cicd-demo
+        serviceName: node-app
+        manifest: deployment.yaml
