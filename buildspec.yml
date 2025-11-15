@@ -4,8 +4,8 @@ env:
   variables:
     REPOSITORY_URI: "861185453846.dkr.ecr.us-east-1.amazonaws.com/eks-cicd-demo"
   parameter-store:
-    REGION: "/eks/region"
-    CLUSTER_NAME: "/eks/cluster/name"
+    REGION: "us-east-1"
+    CLUSTER_NAME: "eks-cicd-demo"
 
 phases:
   pre_build:
