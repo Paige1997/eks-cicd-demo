@@ -1,11 +1,17 @@
 version: 0.2
 
+env:
+  variables:
+    REPOSITORY_URI: "861185453846.dkr.ecr.us-east-1.amazonaws.com/eks-cicd-demo"
+  parameter-store:
+    REGION: "/eks/region"
+    CLUSTER_NAME: "/eks/cluster/name"
+
 phases:
   pre_build:
     commands:
-      - REPOSITORY_URI="861185453846.dkr.ecr.us-east-1.amazonaws.com/eks-cicd-demo"
       - IMAGE_TAG=$(date +%s)
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
+      - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
   build:
     commands:
       - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
@@ -13,8 +19,9 @@ phases:
   post_build:
     commands:
       - sed -i "s|<ECR_IMAGE_PLACEHOLDER>|$REPOSITORY_URI:$IMAGE_TAG|g" deployment.yaml
+      - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
+      - kubectl apply -f deployment.yaml
 
 artifacts:
   files:
     - deployment.yaml
-    - appspec.yaml
