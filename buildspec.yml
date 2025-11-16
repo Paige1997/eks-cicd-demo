@@ -11,6 +11,7 @@ phases:
     commands:
       - IMAGE_TAG=$(date +%s)
       - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
+      - aws eks get-token --cluster-name $CLUSTER_NAME
   build:
     commands:
       - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
