@@ -19,6 +19,7 @@ phases:
   post_build:
     commands:
       - sed -i "s|<ECR_IMAGE_PLACEHOLDER>|$REPOSITORY_URI:$IMAGE_TAG|g" deployment.yaml
+      - kubectl get nodes
       - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
       - kubectl apply -f deployment.yaml
 
