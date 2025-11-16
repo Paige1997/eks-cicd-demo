@@ -20,7 +20,7 @@ phases:
     commands:
       - sed -i "s|<ECR_IMAGE_PLACEHOLDER>|$REPOSITORY_URI:$IMAGE_TAG|g" deployment.yaml
       - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
-      - kubectl get nodes
+      - kubectl --kubeconfig=/root/.kube/config get nodes
       - kubectl apply -f deployment.yaml
 
 artifacts:
