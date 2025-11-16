@@ -24,6 +24,8 @@ phases:
       - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
       - kubectl --kubeconfig=/root/.kube/config get nodes
       - kubectl apply -f deployment.yaml
+      - kubectl get pods
+      - kubectl apply -f service.yaml
 
 artifacts:
   files:
