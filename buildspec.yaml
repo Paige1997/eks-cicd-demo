@@ -1,0 +1,24 @@
+version: 0.2
+
+env:
+  shell: bash
+
+phases:
+  install:
+    commands:
+      - echo "Retrieving Secrets Manager credentials..."
+      - SECRET_JSON=$(aws secretsmanager get-secret-value --secret-id $DB_SECRET_ARN --query SecretString --output text)
+      - DB_USER=$(echo $SECRET_JSON | jq -r '.DB_USER')
+      - DB_PASS=$(echo $SECRET_JSON | jq -r '.DB_PASS')
+
+      - echo "Retrieving SSM parameter..."
+      - API_KEY=$(aws ssm get-parameter --name $API_PARAM_NAME --with-decryption --query Parameter.Value --output text)
+
+      - echo "==== Loaded Secrets ===="
+      - echo "DB_USER=$DB_USER"
+      - echo "DB_PASS=[REDACTED]"
+      - echo "API_KEY=$API_KEY"
+  build:
+    commands:
+      - echo "Pretending to run app build using secrets..."
+      - echo "Done."
