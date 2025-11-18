@@ -7,7 +7,7 @@ phases:
   install:
     commands:
       - echo "Retrieving Secrets Manager credentials..."
-      - SECRET_JSON=$(aws secretsmanager get-secret-value --secret-id $DB_SECRET_ARN --query SecretString --output text)
+      - SECRET_JSON=$(aws secretsmanager get-secret-value --secret-id $DB_SECRET_ARN --version-stage AWSCURRENT --query SecretString --output text)
       - DB_USER=$(echo $SECRET_JSON | jq -r '.DB_USER')
       - DB_PASS=$(echo $SECRET_JSON | jq -r '.DB_PASS')
 
